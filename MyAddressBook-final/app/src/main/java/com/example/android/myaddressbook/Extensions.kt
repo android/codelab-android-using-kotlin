@@ -16,11 +16,9 @@
 package com.example.android.myaddressbook
 
 import android.graphics.drawable.Drawable
-import android.content.SharedPreferences
 import android.support.v4.content.ContextCompat
 import android.widget.EditText
 import android.widget.TextView
-import com.google.gson.Gson
 
 internal inline fun EditText.validateWith
         (passIcon: Drawable = ContextCompat.getDrawable(context, R.drawable.ic_pass),
@@ -32,22 +30,5 @@ internal inline fun EditText.validateWith
     return validator()
 }
 
-internal inline fun SharedPreferences.edit(func: SharedPreferences.Editor.() -> Unit) {
-    val editor = edit()
-    editor.func()
-    editor.apply()
-}
-
-private val CONTACT_KEY = "contact_key"
-
-internal fun SharedPreferences.Editor.putContacts(contacts: ArrayList<Contact>) {
-    val contactSet = contacts.map { Gson().toJson(it) }.toSet()
-    putStringSet(CONTACT_KEY, contactSet)
-}
-
-internal fun SharedPreferences.getContacts(): ArrayList<Contact> {
-    val contactSet = getStringSet(CONTACT_KEY, HashSet<String>())
-    return contactSet.mapTo(ArrayList()) { Gson().fromJson(it, Contact::class.java) }
-}
 
 

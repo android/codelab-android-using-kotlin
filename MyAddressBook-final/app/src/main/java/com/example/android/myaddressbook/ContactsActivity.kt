@@ -26,11 +26,13 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.Patterns
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_contacts.*
 import kotlinx.android.synthetic.main.contact_list_item.view.*
 import kotlinx.android.synthetic.main.content_contacts.*
@@ -58,13 +60,33 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
         setContentView(R.layout.activity_contacts)
 
         mPrefs = getPreferences(Context.MODE_PRIVATE)
-        mContacts = mPrefs.getContacts()
+        mContacts = loadContacts()
         mAdapter = ContactsAdapter(mContacts)
 
         setSupportActionBar(toolbar)
         setupRecyclerView()
 
         fab.setOnClickListener { showAddContactDialog(-1) }
+    }
+
+    /**
+     * Loads the contacts from SharedPreferences, and deserializes them into
+     * a Contact data type using Gson.
+     */
+    private fun loadContacts(): ArrayList<Contact> {
+        val contactSet = mPrefs.getStringSet(CONTACT_KEY, HashSet())
+        return contactSet.mapTo(ArrayList()) { Gson().fromJson(it, Contact::class.java) }
+    }
+
+    /**
+     * Saves the contacts to SharedPreferences by serializing them with Gson.
+     */
+    private fun saveContacts() {
+        val editor = mPrefs.edit()
+        editor.clear()
+        val contactSet = mContacts.map { Gson().toJson(it) }.toSet()
+        editor.putStringSet(CONTACT_KEY, contactSet)
+        editor.apply()
     }
 
     /**
@@ -90,10 +112,7 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                         val position = viewHolder.adapterPosition
                         mContacts.removeAt(position)
                         mAdapter.notifyItemRemoved(position)
-                        mPrefs.edit {
-                            clear()
-                            putContacts(mContacts)
-                        }
+                        saveContacts()
                     }
                 })
 
@@ -171,10 +190,7 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                     mContacts.add(newContact)
                     mAdapter.notifyItemInserted(mContacts.size)
                 }
-                mPrefs.edit {
-                    clear()
-                    putContacts(mContacts)
-                }
+                saveContacts()
                 dialog.dismiss()
             } else {
                 // Otherwise, shows an error Toast
@@ -229,10 +245,7 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      */
     private fun clearContacts() {
         mContacts.clear()
-        mPrefs.edit {
-            clear()
-            putContacts(mContacts)
-        }
+        saveContacts()
         mAdapter.notifyDataSetChanged()
     }
 
@@ -250,14 +263,12 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                         contactJson.getString("first_name"),
                         contactJson.getString("last_name"),
                         contactJson.getString("email"))
+                Log.d(TAG, "generateContacts: " + contact.toString())
                 mContacts.add(contact)
             }
 
             mAdapter.notifyDataSetChanged()
-            mPrefs.edit {
-                clear()
-                putContacts(mContacts)
-            }
+            saveContacts()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -349,5 +360,11 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                 itemView.setOnClickListener { showAddContactDialog(adapterPosition) }
             }
         }
+    }
+
+    companion object {
+
+        private val CONTACT_KEY = "contact_key"
+        private val TAG = ContactsActivity::class.java.simpleName
     }
 }
