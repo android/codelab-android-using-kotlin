@@ -2,7 +2,7 @@ MyAddressBook
 =============
 
 This is the repository that contains both the starter and finished app for the
-[Taking Advantage of Kotlin codelab](TODO: ADD LINK). The starter app is written
+[Taking Advantage of Kotlin codelab](https://codelabs.developers.google.com/codelabs/taking-advantage-of-kotlin/index.html). The starter app is written
 in Java, which is then converted to Kotlin and extended.
 
 Introduction
