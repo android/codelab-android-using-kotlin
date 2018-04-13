@@ -233,6 +233,16 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                 generateContacts()
                 return true
             }
+            R.id.action_sort_first -> {
+                mContacts.sortBy { it.firstName }
+                mAdapter.notifyDataSetChanged()
+                return true
+            }
+            R.id.action_sort_last -> {
+                mContacts.sortBy { it.lastName }
+                mAdapter.notifyDataSetChanged()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

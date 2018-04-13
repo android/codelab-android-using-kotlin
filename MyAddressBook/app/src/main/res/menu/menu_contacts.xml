@@ -18,6 +18,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.myaddressbook.ContactsActivity">
     <item
+        android:id="@+id/action_sort_first"
+        android:orderInCategory="100"
+        android:title="Sort by First Name"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_last"
+        android:orderInCategory="100"
+        android:title="Sort by Last Name"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_clear"
         android:orderInCategory="100"
         android:title="@string/action_clear"
