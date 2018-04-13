@@ -18,7 +18,6 @@ package com.example.android.myaddressbook
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
@@ -32,38 +31,28 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-
 import com.google.gson.Gson
-
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
-
 import java.io.IOException
-import java.io.InputStream
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 class ContactsActivity : AppCompatActivity(), TextWatcher {
 
-    private var mContacts: ArrayList<Contact>? = null
-    private var mAdapter: ContactsAdapter? = null
+    private lateinit var mContacts: ArrayList<Contact>
+    private lateinit var mAdapter: ContactsAdapter
 
-    private var mPrefs: SharedPreferences? = null
+    private lateinit var mPrefs: SharedPreferences
 
-    private var mFirstNameEdit: EditText? = null
-    private var mLastNameEdit: EditText? = null
-    private var mEmailEdit: EditText? = null
+    private lateinit var mFirstNameEdit: EditText
+    private lateinit var mLastNameEdit: EditText
+    private lateinit var mEmailEdit: EditText
 
-    private var mEntryValid: Boolean = false
+    private var mEntryValid = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +76,9 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      * a Contact data type using Gson.
      */
     private fun loadContacts(): ArrayList<Contact> {
-        val contactSet = mPrefs!!.getStringSet(CONTACT_KEY, HashSet())
+        val contactSet = mPrefs.getStringSet(CONTACT_KEY, HashSet())
         val contacts = ArrayList<Contact>()
-        for (contactString in contactSet!!) {
+        for (contactString in contactSet) {
             contacts.add(Gson().fromJson(contactString, Contact::class.java))
         }
         return contacts
@@ -99,10 +88,10 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      * Saves the contacts to SharedPreferences by serializing them with Gson.
      */
     private fun saveContacts() {
-        val editor = mPrefs!!.edit()
+        val editor = mPrefs.edit()
         editor.clear()
         val contactSet = HashSet<String>()
-        for (contact in mContacts!!) {
+        for (contact in mContacts) {
             contactSet.add(Gson().toJson(contact))
         }
         editor.putStringSet(CONTACT_KEY, contactSet)
@@ -131,8 +120,8 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder,
                                           direction: Int) {
                         val position = viewHolder.adapterPosition
-                        mContacts!!.removeAt(position)
-                        mAdapter!!.notifyItemRemoved(position)
+                        mContacts.removeAt(position)
+                        mAdapter.notifyItemRemoved(position)
                         saveContacts()
                     }
                 })
@@ -158,9 +147,9 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
         mEmailEdit = dialogView.findViewById(R.id.edittext_email)
 
         // Listens to text changes to validate after each key press
-        mFirstNameEdit!!.addTextChangedListener(this)
-        mLastNameEdit!!.addTextChangedListener(this)
-        mEmailEdit!!.addTextChangedListener(this)
+        mFirstNameEdit.addTextChangedListener(this)
+        mLastNameEdit.addTextChangedListener(this)
+        mEmailEdit.addTextChangedListener(this)
 
         // Checks if the user is editing an existing contact
         val editing = contactPosition > -1
@@ -184,12 +173,12 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
         // If the contact is being edited, populates the EditText with the old
         // information
         if (editing) {
-            val (firstName, lastName, email) = mContacts!![contactPosition]
-            mFirstNameEdit!!.setText(firstName)
-            mFirstNameEdit!!.isEnabled = false
-            mLastNameEdit!!.setText(lastName)
-            mLastNameEdit!!.isEnabled = false
-            mEmailEdit!!.setText(email)
+            val (firstName, lastName, email) = mContacts[contactPosition]
+            mFirstNameEdit.setText(firstName)
+            mFirstNameEdit.isEnabled = false
+            mLastNameEdit.setText(lastName)
+            mLastNameEdit.isEnabled = false
+            mEmailEdit.setText(email)
         }
         // Overrides the "Save" button press and check for valid input
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -197,19 +186,19 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
             // or replaces it if the contact is being edited
             if (mEntryValid) {
                 if (editing) {
-                    val editedContact = mContacts!![contactPosition]
-                    editedContact.email = mEmailEdit!!.text.toString()
-                    mContacts!![contactPosition] = editedContact
-                    mAdapter!!.notifyItemChanged(contactPosition)
+                    val editedContact = mContacts[contactPosition]
+                    editedContact.email = mEmailEdit.text.toString()
+                    mContacts[contactPosition] = editedContact
+                    mAdapter.notifyItemChanged(contactPosition)
                 } else {
                     val newContact = Contact(
-                            mFirstNameEdit!!.text.toString(),
-                            mLastNameEdit!!.text.toString(),
-                            mEmailEdit!!.text.toString()
+                            mFirstNameEdit.text.toString(),
+                            mLastNameEdit.text.toString(),
+                            mEmailEdit.text.toString()
                     )
 
-                    mContacts!!.add(newContact)
-                    mAdapter!!.notifyItemInserted(mContacts!!.size)
+                    mContacts.add(newContact)
+                    mAdapter.notifyItemInserted(mContacts.size)
                 }
                 saveContacts()
                 dialog.dismiss()
@@ -255,9 +244,9 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      * the options menu.
      */
     private fun clearContacts() {
-        mContacts!!.clear()
+        mContacts.clear()
         saveContacts()
-        mAdapter!!.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -275,10 +264,10 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
                         contactJson.getString("last_name"),
                         contactJson.getString("email"))
                 Log.d(TAG, "generateContacts: " + contact.toString())
-                mContacts!!.add(contact)
+                mContacts.add(contact)
             }
 
-            mAdapter!!.notifyDataSetChanged()
+            mAdapter.notifyDataSetChanged()
             saveContacts()
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -332,21 +321,21 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      * text from member variables.
      */
     override fun afterTextChanged(editable: Editable) {
-        val firstNameValid = !mFirstNameEdit!!.text.toString().isEmpty()
-        val lastNameValid = !mLastNameEdit!!.text.toString().isEmpty()
+        val firstNameValid = !mFirstNameEdit.text.toString().isEmpty()
+        val lastNameValid = !mLastNameEdit.text.toString().isEmpty()
         val emailValid = Patterns.EMAIL_ADDRESS
-                .matcher(mEmailEdit!!.text).matches()
+                .matcher(mEmailEdit.text).matches()
 
         val failIcon = ContextCompat.getDrawable(this,
                 R.drawable.ic_fail)
         val passIcon = ContextCompat.getDrawable(this,
                 R.drawable.ic_pass)
 
-        mFirstNameEdit!!.setCompoundDrawablesWithIntrinsicBounds(null, null,
+        mFirstNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 if (firstNameValid) passIcon else failIcon, null)
-        mLastNameEdit!!.setCompoundDrawablesWithIntrinsicBounds(null, null,
+        mLastNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 if (lastNameValid) passIcon else failIcon, null)
-        mEmailEdit!!.setCompoundDrawablesWithIntrinsicBounds(null, null,
+        mEmailEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 if (emailValid) passIcon else failIcon, null)
 
         mEntryValid = firstNameValid and lastNameValid and emailValid
