@@ -13,34 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.myaddressbook;
+package com.example.android.myaddressbook
 
-class Contact {
-
-    private String firstName;
-    private String lastName;
-    private String email;
-
-
-    Contact(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    String getFirstName() {
-        return firstName;
-    }
-
-    String getLastName() {
-        return lastName;
-    }
-
-    String getEmail() {
-        return email;
-    }
-
-    void setEmail(String email) {
-        this.email = email;
-    }
-}
+internal data class Contact(val firstName: String, val lastName: String, var email: String?)
