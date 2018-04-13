@@ -1,9 +1,19 @@
 MyAddressBook
 =============
 
-This is the repository that contains both the starter and finished app for the
-[Taking Advantage of Kotlin codelab](https://codelabs.developers.google.com/codelabs/taking-advantage-of-kotlin/index.html). The starter app is written
-in Java, which is then converted to Kotlin and extended.
+This is the repository that contains both the starter, each step and a finished app for the workshop assignments in the Workshop/ directory. 
+This is an updated version of the original 
+[Taking Advantage of Kotlin codelab](https://codelabs.developers.google.com/codelabs/taking-advantage-of-kotlin/index.html).
+
+The starter app is written in Java, which is then converted to Kotlin and extended.
+
+Tags:
+* `step-1` begin of 1_Introduction.md, the starter app in Java
+* `step-2` completed 2_Getting_set_up.md, the starter app with Kotlin configured
+* `step-3` completed 3_Kotlin_Conversion_Basics.md, the app converted to Kotlin
+* `step-4` completed 4_Lambdas_and_Standard_Library_Extensions.md, applied lambdas 
+* `step-5` completed 5_Custom_Extension_Functions.md, created extension functions
+
 
 Introduction
 ------------
@@ -25,10 +35,10 @@ A basic knowledge of developing Android apps in Java, specifically:
 
 Getting Started
 ---------------
-1. Download the code.
-2. Pick either the starter or finished directory and open the respective folder
- in Android Studio 3.0.
+1. Clone the repo. `git clone https://github.com/rcgroot/android-using-kotlin.git`
+2. Switch to the beginning tap `git checkout step-1` and open `MyAddressBook` in Android Studio 3.1
 3. Run the app.
+4. Open the markdown file 1_Introduction.md in the directory `Workshop/` and begin
 
 
 License
