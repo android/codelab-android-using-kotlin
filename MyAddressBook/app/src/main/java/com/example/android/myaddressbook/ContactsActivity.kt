@@ -35,6 +35,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.edit
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONException
@@ -84,14 +85,14 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
      * Saves the contacts to SharedPreferences by serializing them with Gson.
      */
     private fun saveContacts() {
-        val editor = mPrefs.edit()
-        editor.clear()
-        val contactSet = mContacts
-                .asSequence()
-                .map { Gson().toJson(it) }
-                .toSet()
-        editor.putStringSet(CONTACT_KEY, contactSet)
-        editor.apply()
+        mPrefs.edit {
+            clear()
+            val contactSet = mContacts
+                    .asSequence()
+                    .map { Gson().toJson(it) }
+                    .toSet()
+            putStringSet(CONTACT_KEY, contactSet)
+        }
     }
 
     /**
