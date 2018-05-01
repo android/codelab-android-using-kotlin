@@ -2,7 +2,7 @@ MyAddressBook
 =============
 
 This is the repository that contains both the starter and finished app for the
-[Taking Advantage of Kotlin codelab](TODO: ADD LINK). The starter app is written
+[Taking Advantage of Kotlin codelab](https://codelabs.developers.google.com/codelabs/taking-advantage-of-kotlin/#0). The starter app is written
 in Java, which is then converted to Kotlin and extended.
 
 Introduction
@@ -34,7 +34,7 @@ Getting Started
 License
 -------
 
-Copyright 2017 Google, Inc.
+Copyright 2018 Google, Inc.
 
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
 license agreements.  See the NOTICE file distributed with this work for
