@@ -367,8 +367,8 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
         }
 
         internal inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var nameLabel: TextView = itemView.findViewById(R.id.textview_name)
-            var emailLabel: TextView = itemView.findViewById(R.id.textview_email)
+            var nameLabel = itemView.findViewById<TextView>(R.id.textview_name)
+            var emailLabel = itemView.findViewById<TextView>(R.id.textview_email)
 
             init {
                 itemView.setOnClickListener { showAddContactDialog(adapterPosition) }
